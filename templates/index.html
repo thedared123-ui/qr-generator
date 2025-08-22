@@ -1,166 +1,181 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de QR</title>
-    <style>
-        body {
-            background: #3b9999;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #255021, #15313a, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to left, #36133d, #150985, #411e70); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de QR</title>
+<style>
+    /* Reset básico */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
+    body {
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to left, #36133d, #150985, #411e70);
+        padding: 20px;
+    }
 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            text-align: center;
-            margin-top: 50px;
+    main {
+        width: 100%;
+        max-width: 450px;
+    }
 
-            display: flex;
-            justify-content: center; /* centro horizontal */
-            align-items: center;     /* centro vertical */
-            height: 100vh;           /* altura de la pantalla */
-            margin: 0; 
+    section {
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 25px;
+        padding: 25px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        color: #ffffff;
+    }
+
+    .title {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        font-size: 16px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 15px;
+        border: none;
+        background-color: #31097c;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    input[type="submit"]:hover {
+        background-color: #4b14d1;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    input[type="submit"]:active {
+        transform: scale(0.97);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .qr-container {
+        width: 100%;
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px dashed #60a5fa;
+        background: rgba(30, 58, 138, 0.3);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+    .qr-placeholder {
+        width: 80%;
+        max-width: 200px;
+        height: auto;
+        aspect-ratio: 1/1;
+        background: #374151;
+        margin: 0 auto 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .qr-text {
+        color: #e5e7eb;
+        font-size: 16px;
+        word-break: break-word;
+        margin-bottom: 10px;
+    }
+
+    img {
+        width: 80%;
+        max-width: 200px;
+        margin: 10px auto;
+        display: block;
+    }
+
+    /* Media Queries */
+    @media (max-width: 480px) {
+        .title {
+            font-size: 1.5em;
         }
-
-        input[type="text"] {
-            width: 300px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            border: none;
-
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            color: white;
-            font-size: 16px;
+        input[type="text"], input[type="submit"] {
+            font-size: 14px;
+            padding: 12px;
         }
-
-        
-
-
-        input[type="submit"] {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            background-color: #31097c;
-            color: #ffffff;
-            padding: 10px 20px;
-            margin: 20px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 17px;
-            border: none;                   /* sin borde */
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* sombra inicial */
-        }
-
-        /* Animación al pasar el mouse */
-        input[type="submit"]:hover {
-            background-color: #4b14d1;        /* cambia ligeramente el color */
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* sombra más intensa */
-        }
-
-        /* Animación al hacer click */
-        input[type="submit"]:active {
-            transform: scale(0.97);            /* efecto de presión */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* sombra más suave al presionar */
-        }
-
-
-        img {
-            margin-top: 10px;
-        }
-
-        .title{
-            color: #ffffff;
-            
-        }
-
-        section {
-            width: 500px;
-            padding: 30px;
-            border-radius: 30px;                     /* bordes más redondeados */
-            background: rgba(255, 255, 255, 0.03);   /* aún más transparente */
-            backdrop-filter: blur(30px);             /* desenfoque fuerte */
-            -webkit-backdrop-filter: blur(30px);     /* compatibilidad Safari */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* borde muy sutil */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* sombra más ligera */
-            color: white;
-            text-align: center;
-
-            margin-left: 20px;
-            margin-right: 20px;
-        }
-
-        .qr-container {
-            border: 2px dashed #60a5fa;
-            border-radius: 12px;
-            padding: 40px;
-            background: rgba(30, 58, 138, 0.3);
-            backdrop-filter: blur(10px);
-            text-align: center;
-            max-width: 83%;
-            width: 100%;
-        }
-
-        .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            background: #374151;
-            border-radius: 12px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #9ca3af;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
         .qr-text {
-            color: #e5e7eb;
-            font-size: 16px;
-            margin-bottom: 10px;
+            font-size: 14px;
         }
-
-    </style>
+        .qr-placeholder {
+            max-width: 150px;
+        }
+        img {
+            max-width: 150px;
+        }
+    }
+</style>
 </head>
 <body>
 
-    <!--Ingresar url-->
+<main>
+    <!-- Formulario -->
     <section>
         <h1 class="title">GENERADOR CÓDIGO QR</h1>
-    <form method="POST">
-        <input type="text" name="url" placeholder="Ingresa la URL" required>
-        <br>
-        <input type="submit" id="generar-btn" value="GENERAR QR">
-    </form>
+        <form method="POST">
+            <input type="text" name="url" placeholder="Ingresa la URL" required>
+            <input type="submit" value="GENERAR QR">
+        </form>
     </section>
 
-    <form id="mi-formulario">
-    <section id="qr-section">
-        <div class="qr-container contenido1">
-            <div class="qr-text">
-                El código QR aparecerá aquí
-            </div>
-                {% if qr_img %}
-                    <img src="data:image/png;base64,{{ qr_img }}" alt="QR Code">
-                {% else %}
-                    <p>No se generó ningún QR.</p>
-                {% endif %}
+    <!-- QR -->
+    <section>
+        <div class="qr-container">
+            <div class="qr-text">El código QR aparecerá aquí</div>
 
-                <div class="qr-text">
-                    {% if url %}
-                        <p>URL INGRESADA: {{ url }}</p>
-                        <input type="submit" id="generar" value="NUEVO INTENTO">
-                    {% else %}
-                        URL // NO DEFINIDA
-                    {% endif %}
-                </div>
+            {% if qr_img %}
+                <img src="data:image/png;base64,{{ qr_img }}" alt="QR Code">
+            {% else %}
+                <div class="qr-placeholder">QR Placeholder</div>
+            {% endif %}
+
+            <div class="qr-text">
+                {% if url %}
+                    <p>URL INGRESADA: {{ url }}</p>
+                {% else %}
+                    URL // NO DEFINIDA
+                {% endif %}
+            </div>
         </div>
     </section>
-</form>
+</main>
 
 </body>
 </html>
