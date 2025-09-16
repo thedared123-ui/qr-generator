@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador de QR</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=more_horiz" />
+
 <style>
     /* Reset básico */
     * {
@@ -20,6 +23,36 @@
         align-items: center;
         background: linear-gradient(to left, #36133d, #150985, #411e70);
         padding: 20px;
+    }
+
+    .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+
+    display: flex;
+    justify-content: center;
+    
+    font-size: 30px;
+    width: 60px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 25px;
+    padding: 5px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .material-symbols-outlined :hover {
+        background-color: #4b14d1;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .material-symbols-outlined :active {
+        transform: scale(0.97);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     main {
@@ -45,21 +78,8 @@
         margin-bottom: 20px;
     }
 
-    input[type="text"] {
-        width: 100%;
-        padding: 14px;
-        border-radius: 12px;
-        border: none;
-        font-size: 16px;
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 6px 25px rgba(0,0,0,0.2);
-        color: white;
-        margin-bottom: 20px;
-    }
-
-    input[type="submit"] {
+    a{
+        text-decoration: none;
         width: 100%;
         padding: 12px;
         font-size: 16px;
@@ -73,54 +93,70 @@
         box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
 
-    input[type="submit"]:hover {
+    a:hover {
         background-color: #4b14d1;
         box-shadow: 0 8px 16px rgba(0,0,0,0.3);
     }
 
-    input[type="submit"]:active {
+    a:active {
         transform: scale(0.97);
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
-    .qr-container {
-        width: 100%;
-        padding: 20px;
-        border-radius: 15px;
-        border: 2px dashed #60a5fa;
-        background: rgba(30, 58, 138, 0.3);
-        backdrop-filter: blur(10px);
-        text-align: center;
+    img{
+        height: 200px;
+        margin-top: 40px;
     }
 
-    .qr-placeholder {
-        width: 80%;
-        max-width: 200px;
-        height: auto;
-        aspect-ratio: 1/1;
-        background: #374151;
-        margin: 0 auto 20px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        font-weight: 500;
+    p{
+        margin-top: 20px;
     }
+    /* Tooltip container */
+.tooltip {
+position: relative;
+}
 
-    .qr-text {
-        color: #e5e7eb;
-        font-size: 16px;
-        word-break: break-word;
-        margin-bottom: 10px;
-    }
+/* Texto del tooltip */
+.tooltip .tooltip-text {
+visibility: hidden;
+opacity: 0;
+width: 220px;
+background: rgba(30, 58, 138, 0.8);
+backdrop-filter: blur(10px);
+color: #fff;
+text-align: center;
+border-radius: 12px;
+padding: 10px;
+position: absolute;
+z-index: 10;
+bottom: 125%; /* aparece arriba del texto */
+left: 50%;
+transform: translateX(-115%);
+margin-bottom: 10px;
+transition: opacity 0.3s;
+font-size: 14px;
+font-weight: bold;
+box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
 
-    img {
-        width: 80%;
-        max-width: 200px;
-        margin: 10px auto;
-        display: block;
-    }
+/* Flechita del tooltip */
+.tooltip .tooltip-text::after {
+content: "";
+position: absolute;
+top: 100%; /* flecha abajo */
+left: 50%;
+margin-left: -6px;
+border-width: 6px;
+border-style: solid;
+border-color: rgba(30, 58, 138, 0.8) transparent transparent transparent;
+}
+
+/* Mostrar tooltip en hover o tap */
+.tooltip:hover .tooltip-text,
+.tooltip:active .tooltip-text {
+visibility: visible;
+opacity: 1;
+}
 
     /* Media Queries */
     @media (max-width: 480px) {
@@ -131,50 +167,43 @@
             font-size: 14px;
             padding: 12px;
         }
-        .qr-text {
-            font-size: 14px;
-        }
-        .qr-placeholder {
-            max-width: 150px;
-        }
-        img {
-            max-width: 150px;
-        }
+
     }
+
 </style>
 </head>
 <body>
-
+    
 <main>
     <!-- Formulario -->
     <section>
         <h1 class="title">GENERADOR CÓDIGO QR</h1>
-        <form method="POST">
-            <input type="text" name="url" placeholder="Ingresa la URL" required>
-            <input type="submit" value="GENERAR QR">
-        </form>
-    </section>
-
-    <!-- QR -->
-    <section>
-        <div class="qr-container">
-            <div class="qr-text">El código QR aparecerá aquí</div>
-
-            {% if qr_img %}
-                <img src="data:image/png;base64,{{ qr_img }}" alt="QR Code">
-            {% else %}
-                <div class="qr-placeholder">QR Placeholder</div>
-            {% endif %}
-
-            <div class="qr-text">
-                {% if url %}
-                    <p>URL INGRESADA: {{ url }}</p>
-                {% else %}
-                    URL // NO DEFINIDA
-                {% endif %}
+        <section>
+            <div>
+                <a href="{{ url_for('qr_classic') }}">GENERAR QR (CLASICO)</a>
+                <p>Ejemplo:</p>
+                <img src="icono.png" alt="qr con logo">
             </div>
-        </div>
-    </section>
+
+            <span class="tooltip">
+                <span class="material-symbols-outlined">more_horiz</span>
+                <span class="tooltip-text">Código QR clásico, simple y fácil de escanear.</span>
+            </span>
+            </section>
+            
+            <section>
+                <div>
+                    <a href="{{ url_for('qr_with_logo') }}">GENERAR QR (CON LOGO)</a>
+                    <p>Ejemplo:</p>
+                    <img src="icono.png" alt="qr con logo">
+                </div>
+
+            <span class="tooltip">
+                <span class="material-symbols-outlined">more_horiz</span>
+                <span class="tooltip-text">Código QR personalizado con un ícono en el centro.</span>
+            </span>
+            </section>
+        </section>
 </main>
 
 </body>
